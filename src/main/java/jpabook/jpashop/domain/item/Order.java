@@ -29,11 +29,11 @@ public class Order {
     private  Member member;
 
     //Order는 OrderItem을 여러개 가질 수 있다. OrderItem은 하나의 Order만 가질 수 있다.
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL) //order삭제시 FK참조하는 OrderItems 모두 삭제
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name="delivery_id") //    Order에  FK가 있으므로 연관 관계의 주인은 Order에 둔다.
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) //order삭제시 FK참조하는 Delivery 모두 삭제
+    @JoinColumn(name="delivery_id") //Order에  FK가 있으므로 연관 관계의 주인은 Order에 둔다.
     private Delivery delivery;
 
     private LocalDateTime orderDate; //주문시간
@@ -43,4 +43,17 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; //주문상태 ORDER, CANCEL
 
+    //==연관관계 편의 메소드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getOrders().add(this);
+    }
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
 }
