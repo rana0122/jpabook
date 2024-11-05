@@ -1,4 +1,4 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.domain.item;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -26,5 +26,5 @@ public class Member {
     //이쪽에 값을 변경한다고 해서  FK값이 변경되지 않다.
     //왼쪽 class to 오른쪽 field
     @OneToMany(mappedBy = "member") //사용자는 주문을 여러개 할 수 있다. 주문하나에 여러 사용자가 있을 수 없다.
-    private List<Order> orders = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>(); //컬랙션은 의존성 주입하지말고 필드에서 초기화해서 쓰자.
 }

@@ -1,4 +1,4 @@
-package jpabook.jpashop.domain;
+package jpabook.jpashop.domain.item;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +7,8 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Table(name="orders")
@@ -22,7 +24,7 @@ public class Order {
     //따라서  Order 의 FK인 Member를  update한다. -> 반대쪽인 Member의 Order는 mappedBy로 미러링 시켜준다.
     //Member의 Order에 값을 변경한다고 해서  FK값이 변경되지 않다.
     //Order의 Member 를 변경할 때 FK가 변경된다.
-    @ManyToOne // 사용자는 주문을 여러개 할 수 있다. 하나의 주문은 여러 사용자가 있을 수 없다.
+    @ManyToOne( fetch = LAZY) // 사용자는 주문을 여러개 할 수 있다. 하나의 주문은 여러 사용자가 있을 수 없다.
     @JoinColumn(name="member_id")
     private  Member member;
 
@@ -30,7 +32,7 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name="delivery_id") //    Order에  FK가 있으므로 연관 관계의 주인은 Order에 둔다.
     private Delivery delivery;
 
